@@ -1,0 +1,6 @@
+
+.cssDataGrid .sortIcon {
+	display: inline-flex;
+	padding-left: .3rem;
+	font-weight: bold;
+}

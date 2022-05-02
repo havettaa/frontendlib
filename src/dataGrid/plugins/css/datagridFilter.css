@@ -1,0 +1,91 @@
+
+.cssDataGrid th:hover .filterIcon:not(.appear) {
+	fill: inherit;
+}
+
+
+.cssDataGrid .filterIcon.appear {
+	fill: inherit
+}
+
+
+.cssDataGrid .filterIcon:hover {
+	background-color: rgba(0, 0, 0, .1);
+}
+
+
+.cssDataGrid .filterIcon {
+	fill: none;
+	display: inline-flex;
+	vertical-align: inherit;
+	padding: .4rem;
+	padding-top: .5rem;
+	padding-right: .43rem;
+	margin-top: -0.2rem;
+	border-radius: .8rem;
+}
+
+
+.cssDataGrid .filterDialog {
+	display: none;
+	cursor: default;
+	background-color: var(--tableBgColor, #fff);
+	border-collapse: collapse;
+  border-radius: 4px;
+	border-width: 1px;
+	border-style: groove;
+
+	position: absolute;
+	min-width: 10rem;
+	margin-top: .5rem;
+	padding: 1rem;
+	padding-top: 2.5rem;
+}
+
+
+.cssDataGrid .showDialog {
+	display: inherit;
+}
+
+
+.cssDataGrid .filterDialog .closeButton {
+	position: absolute;
+	margin-top: .2rem;
+	margin-right: .2rem;
+	padding: .3rem;
+	right: 0;
+	top: 0;
+}
+.cssDataGrid .filterDialog .closeButton:hover {
+	background-color: rgba(0, 0, 0, .1);
+}
+
+
+.cssDataGrid .filterButton {
+	margin: 0.3rem;
+	margin-left: 5.3rem;
+	padding: 0.5rem;
+}
+
+
+.cssDataGrid input {
+	margin: 0.3rem;
+	padding: 0.2rem;
+}
+
+
+.cssDataGrid label {
+	display: inline-grid;
+	min-width: 5rem;
+}
+
+
+.cssDataGrid .labelcheckbox {
+	display: flex;
+	padding: 0.25rem;
+}
+.cssDataGrid .labelcheckbox input {
+	margin-right: .4rem;
+	margin-top: .28rem;
+}
+

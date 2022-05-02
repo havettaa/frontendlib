@@ -1,0 +1,8 @@
+<mat-form-field> 
+    <mat-label>{{properties?.name}}</mat-label>
+    <input matInput [matDatepicker]="datepicker" autocomplete="off" [min]="properties?.min" [max]="properties?.max" 
+    [value]="properties?.value" (dateChange)="dateChange($event, datepicker)">
+  <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+  <mat-datepicker #datepicker [startView]="properties?.type == 'month' ? 'multi-year' : 'month'" panelClass="example-month-picker" 
+  (monthSelected)="properties?.type == 'month' ? dateChange($event, datepicker) : null"></mat-datepicker>
+</mat-form-field>

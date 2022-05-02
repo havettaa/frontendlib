@@ -1,0 +1,118 @@
+.gridTable th {
+    color: var(--fontColor);
+    text-shadow: 0 0 silver;
+    background-color: var(--tableheaderBgColor);
+    border-top: 1px solid var(--tableheaderBorderTopColor);
+    border-bottom-width: 3px !important;
+    border-bottom-color: var(--tableheaderBorderBottonColor);
+}
+
+.gridTable th:hover {
+    border-bottom-color: var(--tableheaderBorderBottonHoverColor)
+}
+
+.gridHeader {
+    display: flex;
+    align-items: center;
+}
+
+.gridFilterMenu{
+    max-width: 360px !important;
+}
+
+.gridFilter {
+    padding: 20px;
+}
+
+.gridDateFilter {
+    text-align: center;
+}
+
+.gridFilterButton {
+    width: 30px;
+    height: 26px;
+    line-height: 0;
+    min-width: 0;
+    padding: 0px;
+}
+
+.gridFromToFilter {
+    display: grid;
+}
+
+.gridPicklistFilter {
+    max-height:5000px; 
+    padding-top: 5px; 
+    padding-bottom: 5px
+}
+
+.gridFilterHiddenIcon{
+    opacity: 0;
+}
+
+.gridTable th:hover .gridFilterHiddenIcon{
+    opacity: 0.2;
+}
+
+.width01 {
+    width: 1%;
+}
+
+.width05 {
+    width: 5%;
+}
+
+.width10 {
+    width: 10%;
+}
+
+.width15 {
+    width: 15%;
+}
+
+.width20 {
+    width: 20%;
+}
+
+.width25 {
+    width: 25%;
+}
+
+.width30 {
+    width: 30%;
+}
+
+.width50 {
+    width: 50%;
+}
+
+
+input[type='checkbox'] {
+	width: 12px;
+	height: 12px;
+	display: block;
+    float:left;
+    cursor: pointer;
+    margin-top:6px;
+}
+
+input[type='checkbox']:after {
+	content: "";
+	vertical-align: middle;
+	text-align: center;
+	line-height: 12px;
+	position: absolute;
+	cursor: pointer;
+	height: 12px;
+	width: 12px;
+    box-shadow: none !important;
+
+
+}
+
+
+input[type='checkbox']:checked:after {
+	background: #0097ba;
+	content: '🗸';
+	color: #fff;
+}

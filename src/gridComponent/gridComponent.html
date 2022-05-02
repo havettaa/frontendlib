@@ -1,0 +1,158 @@
+<button *ngIf="config.showClearFilters" mat-raised-button (click)="clearFilters()">{{gridText.ClearFilters}}</button>
+<button *ngIf="config.showExportToExcel" mat-raised-button (click)="exportToExcel()">{{gridText.ExportToExcel}}</button>
+
+<table mat-table [dataSource]="dataSource" class="gridTable">
+    <ng-container [matColumnDef]="column.id" *ngFor="let column of columns">
+        <th mat-header-cell *matHeaderCellDef [class]="column.widthClass" [style]="{ cursor : !column.disableOrder ? 'pointer' : 'default'}">
+            <div class="gridHeader">       
+            
+                <div (click)="!column.disableOrder ? sortColumnAction(column, columns) : false">
+                    {{column.name}}
+                </div>
+
+                <mat-checkbox *ngIf="column.isMultiSelect" 
+                    color="primary"
+                    (change)="isSelectedAll() ? deselectAll() : selectAll()"
+                    [indeterminate]="isAnySelected() && !isSelectedAll()"
+                    [checked]="isSelectedAll()">
+                </mat-checkbox>
+
+                <mat-menu #gridFilter="matMenu" class="gridFilterMenu">
+                    <div *ngIf="column.fromToFilter" (click)="stopPropagation($event)" class="gridFilter gridFromToFilter">
+                        <mat-form-field appearance="standard">
+                            <mat-label>{{gridText.NumberFilterFrom}}</mat-label>
+                            <input #numberFrom matInput type="number" (keyup)="fromToFilterFrom(column, numberFrom.value)" [value]="column.filter?.fromTo[0]">
+                        </mat-form-field>
+                        <mat-form-field appearance="standard">
+                            <mat-label>{{gridText.NumberFilterTo}}</mat-label>
+                            <input #numberTo matInput type="number" (keyup)="fromToFilterTo(column, numberTo.value)" [value]="column.filter?.fromTo[1]">
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="column.textSearchFilter" (click)="stopPropagation($event)" class="gridFilter">
+                        <mat-form-field appearance="standard">
+                            <mat-label>{{gridText.SearchFilter}}</mat-label>
+                            <input #textSearch matInput type="text" (keyup)="textSearchFilter(column, textSearch.value)" [value]="column.filter?.text">
+                        </mat-form-field>
+                    </div>
+
+
+                    <div *ngIf="column.picklistOptions" (click)="stopPropagation($event)" class="gridFilter gridpicklistFilter">
+                        <ul style="list-style-type:none; padding-inline-start: 5px;">
+                            <li *ngFor="let item of column.picklistOptions">
+                                <input #checkboxes type="checkbox" color="primary" [checked]="column.filter?.picklistValues?.indexOf(item.vid)>=0" (change)="picklistFilter(column, item.vid)">
+                                    {{item.value}}
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- <div *ngIf="column.picklistOptions" (click)="stopPropagation($event)" class="gridFilter gridpicklistFilter">
+                        <ul style="list-style-type:none; padding-inline-start: 5px;">
+                            <li *ngFor="let item of column.picklistOptions">
+                                <mat-checkbox color="primary" [checked]="column.filter?.picklistValues?.indexOf(item.vid)>=0" (change)="picklistFilter(column, item.vid)">
+                                    {{item.value}}
+                                </mat-checkbox>
+                            </li>
+                        </ul>
+                    </div> -->
+
+                    <div *ngIf="column.dateFilter" (click)="stopPropagation($event)" class="gridFilter gridDateFilter">
+                        <mat-tab-group *ngIf="!this.config.disableMonthDatepicker">
+                            <mat-tab [label]="gridText.DateFilterFromToCaption">
+                                <datePicker [properties]="{
+                                    name: gridText.DateFilterFrom,
+                                    value: column.filter?.dateValue[0],
+                                    type: eDateType.day,
+                                    min: column.filter?.dateMin[0],
+                                    max: column.filter?.dateMax[0],
+                                    format: column.dateFormat,
+                                    language: currentLanguage
+                                }" (dateValue)="dateFilter(column, $event, 'from')">
+                                </datePicker>
+                                <datePicker [properties]="{
+                                    name: gridText.DateFilterTo,
+                                    value: column.filter?.dateValue[1],
+                                    type: eDateType.day,
+                                    min: column.filter?.dateMin[1],
+                                    max: column.filter?.dateMax[1],
+                                    format: column.dateFormat,
+                                    language: currentLanguage
+                                }" (dateValue)="dateFilter(column, $event, 'to')">
+                                </datePicker>
+                            </mat-tab>
+                            <mat-tab [label]="gridText.DateFilterMonthCaption">
+                                <datePicker [properties]="{
+                                    name: gridText?.DateFilterMonth,
+                                    value: column.filter?.dateValue[2],
+                                    type: eDateType.month,
+                                    min: column.filter?.dateMin[2],
+                                    max: column.filter?.dateMax[2],
+                                    format: column.dateFormat,
+                                    language: currentLanguage
+                                }" (dateValue)="dateFilter(column, $event, 'month')">
+                                </datePicker>
+                            </mat-tab>
+                        </mat-tab-group>
+                        <datePicker *ngIf="this.config.disableMonthDatepicker" [properties]="{
+                            name: gridText.DateFilterFrom,
+                            value: column.filter?.dateValue[0],
+                            type: eDateType.day,
+                            min: column.filter?.dateMin[0],
+                            max: column.filter?.dateMax[0],
+                            format: column.dateFormat,
+                            language: currentLanguage
+                        }" (dateValue)="dateFilter(column, $event, 'from')">
+                        </datePicker>
+                        <datePicker *ngIf="this.config.disableMonthDatepicker" [properties]="{
+                            name: gridText.DateFilterTo,
+                            value: column.filter?.dateValue[1],
+                            type: eDateType.day,
+                            min: column.filter?.dateMin[1],
+                            max: column.filter?.dateMax[1],
+                            format: column.dateFormat,
+                            language: currentLanguage
+                        }" (dateValue)="dateFilter(column, $event, 'to')">
+                        </datePicker>
+                    </div>
+
+                </mat-menu>
+                <mat-icon *ngIf="column.filter?.sortOrder == eSortOrder.None">
+                </mat-icon>
+
+                <mat-icon *ngIf="column.filter?.sortOrder == eSortOrder.Up">arrow_upward
+                </mat-icon>
+
+                <mat-icon *ngIf="column.filter?.sortOrder == eSortOrder.Down">arrow_downward
+                </mat-icon>
+                <p>{{column.filter?.orderIndex}}</p>
+
+                <button class="gridFilterButton" mat-icon-button *ngIf="!column.disableFilter" [matMenuTriggerFor]="gridFilter">
+                    <div *ngIf="(column.filter?.fromTo != null && !isArrayNull(column.filter?.fromTo)) || (column.filter?.text != null && column.filter?.text != '') || (column.filter?.picklist != null && column.filter?.picklist?.length > 0) || (column.filter?.dateValue != null && !isArrayNull(column.filter?.dateValue)) else filterActive">
+                        <mat-icon>filter_alt</mat-icon>
+                    </div>
+                    <ng-template #filterActive>
+                        <mat-icon class="gridFilterHiddenIcon" style="padding-bottom: 3px;">filter_alt</mat-icon>
+                    </ng-template>
+                </button>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let element" (click)="column.function != null ? columnAction(column.function, element, column) : null" [ngStyle]="{'cursor' : (column.function != null ? 'pointer' : 'default') }">
+            <p *ngIf="!column.checkbox && !column.multiSelect && !column.singleSelect && column.id && element">{{element ? element[column.id] : ''}}</p>
+            <mat-checkbox *ngIf="column.checkbox" [checked]="element ? element[column.id] : ''" disabled></mat-checkbox>
+            <mat-checkbox *ngIf="column.isMultiSelect" color="primary" (change)="multiSelectAction(element)" [checked]="Select.multiSelectValues.indexOf(element[Select.selectedKey].toString()) >= 0"></mat-checkbox>
+            <mat-radio-button *ngIf="column.isSingleSelect" color="primary" (change)="singleSelectAction(element)" [checked]="element[Select.selectedKey] == Select.selectedValue"></mat-radio-button>
+            <mat-icon *ngIf="column.icon">{{column.icon}}</mat-icon>
+        </td>
+    </ng-container>
+   
+    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true" ></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<div [hidden]="!this.config.showPaginator">
+    <mat-paginator  class="gridPaginator"
+                [pageSize]="this.config.showPaginator ? paginatorData?.pageSize : this.getActualDataItemsCount"
+                [pageSizeOptions]="paginatorData?.pageSizeOptions"
+                [pageIndex]="paginatorData?.pageIndex"
+                (page)="changePageAction($event)">
+    </mat-paginator>
+</div>
